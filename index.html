@@ -1,48 +1,479 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#030914">
-<title>Kartik AI — Personal Assistant</title>
-<style>
-:root{--bg:#030914;--panel:rgba(7,22,42,.82);--line:rgba(41,156,255,.32);--blue:#159cff;--cyan:#61e5ff;--text:#edf7ff;--muted:#91a9c5}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% 18%,#08264a 0%,#030914 45%,#01040a 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(rgba(46,156,255,.17) 1px,transparent 1px),linear-gradient(90deg,rgba(46,156,255,.17) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
-header{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,58px);border-bottom:1px solid var(--line);background:#020813bd;backdrop-filter:blur(16px);position:sticky;top:0;z-index:5}
-.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.3px}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.7px}.logo{width:38px;height:38px;border:2px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);box-shadow:0 0 22px #159cff66;font-size:20px}
-header nav{display:flex;gap:22px;color:#bfd1e6;font-size:13px}header nav a{color:inherit;text-decoration:none}header nav a:hover{color:var(--cyan)}
-.status{font-size:12px;color:#8fffd1;display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;background:#55f7b1;border-radius:50%;box-shadow:0 0 12px #55f7b1}
-main{max-width:1280px;margin:auto;padding:30px clamp(16px,4vw,48px) 60px}.hero{display:grid;grid-template-columns:1fr .95fr 1fr;align-items:center;gap:24px;min-height:475px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:3px}.intro h1{font-size:clamp(34px,4.3vw,58px);line-height:1.05;letter-spacing:-1.8px;margin:16px 0}.gradient{background:linear-gradient(90deg,#fff,#4cbaff 58%,#62efff);color:transparent;background-clip:text}.intro p{color:#adc1d8;line-height:1.75;font-size:15px;max-width:390px}.pills{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}.pill{border:1px solid var(--line);padding:7px 10px;border-radius:30px;color:#b9d7f4;font-size:11px;background:#05172b}
-button,select,textarea{font:inherit}.btn{border:1px solid #218ff1;background:linear-gradient(135deg,#0b8dff,#14c5f4);color:white;padding:12px 17px;border-radius:30px;font-weight:750;cursor:pointer;box-shadow:0 0 22px #087bff4d;transition:.2s}.btn:hover{transform:translateY(-2px);filter:brightness(1.12)}.btn.secondary{background:#06152a;border-color:#20517c;box-shadow:none;color:#cbe8ff}.orb-wrap{display:grid;place-items:center;position:relative;min-height:360px}.orb{width:min(275px,70vw);aspect-ratio:1;border-radius:50%;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 48%,#0c2847 0 25%,#06172e 38%,#06101e 57%,transparent 68%);filter:drop-shadow(0 0 28px #087eff7a);animation:float 4s ease-in-out infinite}.orb:before,.orb:after{content:"";position:absolute;inset:7%;border:2px solid #2ba9ff;border-radius:50%;box-shadow:inset 0 0 24px #087bff66,0 0 18px #087bff77;animation:spin 14s linear infinite}.orb:after{inset:17%;border-color:#6cefff; border-style:dashed;opacity:.65;animation:spin 10s linear infinite reverse}.core{width:43%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3ce9ff,#087bff 40%,#031027 73%);box-shadow:0 0 35px #159cff,0 0 75px #0077ff77;display:grid;place-items:center;z-index:1}.eyes{display:flex;gap:19px}.eyes span{width:16px;height:6px;border-radius:8px;background:#d9ffff;box-shadow:0 0 12px #fff}.orb.listening .core{animation:pulse .7s infinite alternate}.orb.listening:before{animation-duration:3s}.orb-caption{text-align:center;color:#a8d7ff;font-size:13px;margin-top:-4px}.wave{height:35px;display:flex;align-items:center;justify-content:center;gap:4px;margin:10px}.wave i{width:3px;border-radius:8px;background:#21c9ff;height:8px;animation:wave 1s ease-in-out infinite alternate}.wave i:nth-child(3n){animation-delay:.2s}.wave i:nth-child(2n){animation-delay:.4s}
-@keyframes spin{to{transform:rotate(360deg)}}@keyframes float{50%{transform:translateY(-8px)}}@keyframes pulse{to{box-shadow:0 0 65px #24cfff,0 0 100px #0077ff}}@keyframes wave{to{height:28px}}
-.chat{border:1px solid #1378c5;border-radius:18px;background:linear-gradient(160deg,#071a31ed,#030b17f2);box-shadow:0 0 32px #006dff1a;overflow:hidden;min-height:420px;display:flex;flex-direction:column}.chat-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.chat-head strong{font-size:14px}.chat-head small{display:block;color:var(--muted);margin-top:3px;font-size:11px}.chatlog{padding:15px;display:flex;flex-direction:column;gap:12px;flex:1;max-height:315px;overflow-y:auto}.msg{padding:12px 13px;border:1px solid #174e7c;background:#071a30;border-radius:13px;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.msg.user{align-self:flex-end;max-width:88%;background:#082b54;border-color:#1a6cc0}.msg.bot{align-self:flex-start;max-width:95%}.msg .tag{color:var(--cyan);font-size:10px;display:block;margin-bottom:4px;letter-spacing:1px}.chat-controls{padding:12px;border-top:1px solid var(--line)}.inputrow{display:flex;gap:8px;align-items:center}.inputrow textarea{resize:vertical;min-height:42px;max-height:100px;flex:1;min-width:0;border:1px solid #164d7d;background:#020b17;color:white;border-radius:12px;padding:12px;outline:none}.inputrow textarea:focus{border-color:#36bfff}.iconbtn{border:1px solid #1764a0;background:#061b31;color:#9ee8ff;border-radius:12px;padding:10px 12px;cursor:pointer}.iconbtn.active{background:#a30f36;border-color:#ff5e8c}.smallnote{font-size:10px;color:#829bb7;margin:9px 2px 0;line-height:1.5}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:25px 0}.feature{border:1px solid var(--line);background:#051326b8;padding:18px;border-radius:15px}.feature .ico{font-size:22px;color:var(--cyan)}.feature h3{font-size:14px;margin:12px 0 7px}.feature p{font-size:12px;color:var(--muted);line-height:1.6;margin:0}.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.quick button{border:1px solid #194d7b;background:#06162a;color:#bce8ff;padding:8px 11px;border-radius:30px;font-size:12px;cursor:pointer}.settings{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:0 0 18px;color:var(--muted);font-size:12px}.settings select{background:#06172b;color:#d8edff;border:1px solid #24537c;border-radius:8px;padding:8px;max-width:100%}footer{text-align:center;color:#718ba9;border-top:1px solid var(--line);padding:22px;font-size:12px}
-@media(max-width:980px){.hero{grid-template-columns:1fr 1fr}.intro{grid-column:1}.orb-wrap{grid-column:2;grid-row:1}.chat{grid-column:1/-1;min-height:360px}.chatlog{max-height:280px}.features{grid-template-columns:repeat(2,1fr)}header nav{display:none}}
-@media(max-width:560px){header{height:62px}.status{font-size:10px}.hero{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding-top:18px}.intro h1{font-size:40px}.orb-wrap{min-height:290px;order:2}.orb{width:235px}.chat{order:3}.features{grid-template-columns:1fr 1fr}.feature{padding:13px}.feature h3{font-size:12px}.feature p{font-size:11px}.settings{font-size:11px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050816">
+  <title>Kartik AI | Personal Assistant</title>
+
+  <style>
+    :root {
+      --bg: #050816;
+      --panel: #0c1328;
+      --blue: #36b7ff;
+      --purple: #9565ff;
+      --text: #edf5ff;
+      --muted: #8d9bb8;
+      --border: rgba(116, 165, 255, .18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 50% -10%, #16295a 0, transparent 48%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    button, textarea { font: inherit; }
+
+    .app {
+      width: min(100%, 850px);
+      min-height: 100vh;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      color: white;
+      background: linear-gradient(135deg, #168fff, #874aff);
+      box-shadow: 0 0 28px #267cff45;
+    }
+
+    h1 { margin: 0; font-size: 21px; letter-spacing: .5px; }
+    .subtitle { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    .status {
+      margin-left: auto;
+      font-size: 12px;
+      color: #65f4b2;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #65f4b2;
+      box-shadow: 0 0 10px #65f4b2;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 30px 8px 20px;
+    }
+
+    .orb {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      margin: 0 auto 17px;
+      display: grid;
+      place-items: center;
+      font-size: 40px;
+      background: radial-gradient(circle at 35% 30%, #4ee7ff, #2672ff 45%, #6224ce 75%);
+      box-shadow: 0 0 35px #287dff55, inset 0 0 22px #ffffff45;
+      animation: float 3.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .hero h2 { margin: 0 0 8px; font-size: clamp(24px, 6vw, 34px); }
+    .hero p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .suggestions {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      padding: 4px 0 16px;
+    }
+
+    .suggestion {
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 10px 13px;
+      background: #0c1630;
+      color: #cfe6ff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .suggestion:hover { border-color: var(--blue); }
+
+    .chat {
+      flex: 1;
+      min-height: 220px;
+      max-height: 48vh;
+      overflow-y: auto;
+      padding: 4px 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 13px 15px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+    }
+
+    .assistant {
+      align-self: flex-start;
+      background: #101a32;
+      border-top-left-radius: 5px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #1756a8, #4934a4);
+      border-top-right-radius: 5px;
+    }
+
+    .composer {
+      border: 1px solid #263a60;
+      background: rgba(12, 19, 40, .96);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: 0 10px 40px #0003;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      resize: none;
+      min-height: 54px;
+      max-height: 150px;
+      background: transparent;
+      color: var(--text);
+      border: 0;
+      outline: 0;
+      padding: 8px;
+      font-size: 15px;
+    }
+
+    textarea::placeholder { color: #7585a4; }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+    }
+
+    .control {
+      min-height: 40px;
+      min-width: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #14203a;
+      color: #d8eaff;
+      cursor: pointer;
+      padding: 8px 12px;
+    }
+
+    .control:hover { border-color: var(--blue); }
+
+    .send {
+      margin-left: auto;
+      border: 0;
+      background: linear-gradient(120deg, #168fff, #7651ff);
+      color: white;
+      font-weight: 650;
+      min-width: 94px;
+    }
+
+    .send:disabled { opacity: .5; cursor: wait; }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 13px 4px;
+    }
+
+    .options label { display: flex; align-items: center; gap: 6px; }
+    input[type="checkbox"] { accent-color: var(--blue); }
+
+    footer {
+      text-align: center;
+      color: #61708e;
+      font-size: 11px;
+      padding: 10px 0 2px;
+    }
+
+    .typing { color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 480px) {
+      .app { padding: 13px; }
+      .hero { padding-top: 24px; }
+      .orb { width: 88px; height: 88px; font-size: 34px; }
+      .message { max-width: 94%; }
+      .status { font-size: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; }
+    }
+  </style>
 </head>
+
 <body>
-<header><div class="brand"><div class="logo">✧</div><div>Kartik AI<small>YOUR PERSONAL AI ASSISTANT</small></div></div><nav><a href="#home">Home</a><a href="#features">Features</a><a href="#assistant">Assistant</a></nav><div class="status"><span class="dot"></span><span id="status">SYSTEM READY</span></div></header>
-<main id="home">
-<section class="hero">
-<div class="intro"><div class="eyebrow">INTELLIGENCE, AT YOUR COMMAND</div><h1>Your Personal<br><span class="gradient">AI Assistant.</span></h1><p>Meet Kartik AI — ask questions, explore ideas, learn new skills, and talk naturally. Type or use your microphone to get started.</p><div class="pills"><span class="pill">◉ Voice input</span><span class="pill">◎ Multilingual</span><span class="pill">✦ Futuristic UI</span></div><button class="btn" id="startVoice">🎙 Talk to Kartik AI</button> <button class="btn secondary" id="jumpChat">Open chat ↓</button></div>
-<div class="orb-wrap"><div><div class="orb" id="orb"><div class="core"><div class="eyes"><span></span><span></span></div></div></div><div class="orb-caption" id="orbCaption">“Hello Kartik. I'm ready when you are.”</div><div class="wave" aria-hidden="true" id="wave"></div></div></div>
-<section class="chat" id="assistant"><div class="chat-head"><div><strong>◉ Kartik AI</strong><small id="chatSub">Personal assistant • Ready</small></div><button class="iconbtn" id="clearChat" title="Clear chat">↺</button></div><div class="chatlog" id="chatlog" aria-live="polite"><div class="msg bot"><span class="tag">KARTIK AI</span>Hey Kartik! 👋 Main tumhara personal AI assistant hoon. Mujhse Hindi, Hinglish, English ya apni preferred language mein baat karo. Voice input ke liye mic dabao. <br><br><b>Note:</b> AI brain connect hone tak main demo mode mein hoon.</div></div><div class="chat-controls"><div class="inputrow"><button class="iconbtn" id="mic" title="Start voice input">🎙</button><textarea id="prompt" rows="1" placeholder="Message Kartik AI…"></textarea><button class="btn" id="send">Send ➤</button></div><div class="smallnote" id="notice">Browser speech support varies. Real AI answers require the optional backend setup described in README.</div><div class="quick"><button data-prompt="Explain accounting in very easy words.">📘 Study help</button><button data-prompt="Give me a realistic business idea with zero investment.">💡 Business idea</button><button data-prompt="Teach me technical analysis basics step by step.">📈 Learn trading</button><button data-prompt="Help me plan my day productively.">🗓 Plan my day</button></div></div></section>
-</section>
-<section class="features" id="features"><div class="feature"><div class="ico">◉</div><h3>Voice conversations</h3><p>Speak into your phone mic and hear responses using supported browser speech.</p></div><div class="feature"><div class="ico">◎</div><h3>Multilingual by design</h3><p>Ask in your language. AI response language depends on the connected model and voice availability.</p></div><div class="feature"><div class="ico">✧</div><h3>Animated interface</h3><p>Glowing orb, motion rings, waveform and responsive blue-black dashboard.</p></div><div class="feature"><div class="ico">⌘</div><h3>Private API setup</h3><p>Keep secret API keys on a backend server, never inside public website code.</p></div></section>
-<div class="settings"><label for="lang">Speech language:</label><select id="lang"><option value="auto">Auto / browser default</option><option value="en-IN">English (India)</option><option value="hi-IN">Hindi (India)</option><option value="pa-IN">Punjabi (India)</option><option value="es-ES">Spanish</option><option value="fr-FR">French</option><option value="de-DE">German</option><option value="ja-JP">Japanese</option><option value="ar-SA">Arabic</option></select><label><input type="checkbox" id="speak" checked> Speak answers</label><label><input type="checkbox" id="backendToggle"> Use connected AI backend</label></div>
-</main><footer>Built with ✦ by Kartik • Personal AI interface • Keep your API keys private</footer>
-<script>
-const $=id=>document.getElementById(id);
-const log=$('chatlog'), promptBox=$('prompt'), statusEl=$('status'), orb=$('orb');
-const wave=$('wave'); for(let i=0;i<31;i++){const bar=document.createElement('i');bar.style.height=(5+Math.abs(15-i)*1.2)+'px';wave.appendChild(bar)}
-let recognition=null, listening=false, busy=false;
-function status(s){statusEl.textContent=s.toUpperCase();$('chatSub').textContent='Personal assistant • '+s}
-function addMsg(text,who='bot'){const d=document.createElement('div');d.className='msg '+who; if(who==='bot'){const tag=document.createElement('span');tag.className='tag';tag.textContent='KARTIK AI';d.appendChild(tag)}const content=document.createElement('span');content.textContent=text;d.appendChild(content);log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
-function getLang(){const l=$('lang').value;return l==='auto'?'':l}
-function speak(text){if(!$('speak').checked||!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=getLang()||navigator.language||'en-IN';const voices=window.speechSynthesis.getVoices();const match=voices.find(v=>v.lang.toLowerCase()===u.lang.toLowerCase())||voices.find(v=>v.lang.toLowerCase().startsWith(u.lang.split('-')[0].toLowerCase()));if(match)u.voice=match;u.rate=1;u.pitch=1;u.onstart=()=>{orb.classList.add('listening');status('Speaking')};u.onend=()=>{orb.classList.remove('listening');status('Ready')};window.speechSynthesis.speak(u)}
-function startListen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addMsg('Voice recognition is not available in this browser. Try the latest Chrome on Android, allow microphone permission, or type your message.','bot');return}if(listening){recognition.stop();return}recognition=new SR();recognition.lang=getLang()||navigator.language||'en-IN';recognition.interimResults=false;recognition.maxAlternatives=1;recognition.onstart=()=>{listening=true;$('mic').classList.add('active');orb.classList.add('listening');$('orbCaption').textContent='Listening… speak now';status('Listening')};recognition.onresult=e=>{promptBox.value=e.results[0][0].transcript;sendMessage()};recognition.onerror=e=>{status('Ready');addMsg('Mic issue: '+e.error+'. Check browser microphone permission or type instead.','bot')};recognition.onend=()=>{listening=false;$('mic').classList.remove('active');orb.classList.remove('listening');$('orbCaption').textContent='“Hello Kartik. I’m ready when you are.”';if(!busy)status('Ready')};try{recognition.start()}catch(e){addMsg('Could not start microphone. Wait a moment and try again.','bot')}}
-async function sendMessage(){const text=promptBox.value.trim();if(!text||busy)return;promptBox.value='';addMsg(text,'user');busy=true;status('Thinking');orb.classList.add('listening');const pending=addMsg('Thinking…','bot');try{let answer='';if($('backendToggle').checked){const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,language:getLang()||navigator.language||'en'})});if(!res.ok)throw new Error('Backend returned '+res.status);const data=await res.json();answer=data.reply||data.answer||'No response text received.'}else{answer=demoReply(text)}pending.remove();addMsg(answer,'bot');speak(answer)}catch(err){pending.remove();addMsg('AI backend connection failed. '+err.message+'. Check that the backend is running and /api/chat is configured. Until then, turn off “Use connected AI backend” for demo replies.','bot')}finally{busy=false;orb.classList.remove('listening');if(!listening)status('Ready')}}
-function demoReply(t){const x=t.toLowerCase();if(/hello|hi |hey|hye|namaste/.test(x))return'Hey Kartik! 👋 Main Kartik AI hoon. Abhi demo mode mein hoon. Real AI responses ke liye backend connect karo; filhaal voice interface test kar sakte ho.';if(/account|accounting/.test(x))return'Accounting is the process of identifying, recording, classifying and summarising financial transactions to help people make decisions. Simple example: shop ki sales aur expenses ka record rakhna accounting hai. (Demo response)';if(/trading|technical analysis|stock/.test(x))return'Technical analysis mein price charts, trend, support-resistance, volume aur risk management study kiye jaate hain. Pehle paper trading se practice karo; profit guaranteed nahi hota. (Demo response)';if(/business|earning|money/.test(x))return'Zero-budget start ke liye ek simple service choose karo, 3 sample works banao, phir local shops ya online clients ko personalised offer bhejo. Advance fee dene se bacho. (Demo response)';return'Maine tumhara message receive kar liya. Ye abhi demo reply hai, live AI answer nahi. “Use connected AI backend” tabhi enable karo jab tumne apna secure /api/chat backend set up kar liya ho.'}
-$('send').addEventListener('click',sendMessage);promptBox.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()}});$('mic').addEventListener('click',startListen);$('startVoice').addEventListener('click',startListen);$('jumpChat').addEventListener('click',()=>$('assistant').scrollIntoView({behavior:'smooth'}));$('clearChat').addEventListener('click',()=>{log.innerHTML='';addMsg('Chat cleared. Hey Kartik, what would you like to explore?','bot')});document.querySelectorAll('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{promptBox.value=b.dataset.prompt;promptBox.focus()}));$('backendToggle').addEventListener('change',e=>{ $('notice').textContent=e.target.checked?'Backend mode selected. Ensure /api/chat exists on your deployed server.':'Demo mode selected: responses are examples, not generated by a live AI.'});if(!('speechSynthesis'in window))$('notice').textContent='Speech output is not supported in this browser. Try Chrome or type-only mode.';if(!('SpeechRecognition'in window||'webkitSpeechRecognition'in window))$('notice').textContent='Voice input may not be supported by this browser. Try Chrome on Android or type your message.';
-</script></body></html>
+  <main class="app">
+    <header>
+      <div class="logo">✦</div>
+      <div>
+        <h1>KARTIK AI</h1>
+        <div class="subtitle">YOUR PERSONAL AI ASSISTANT</div>
+      </div>
+      <div class="status"><span class="dot"></span> Ready</div>
+    </header>
+
+    <section class="hero">
+      <div class="orb" aria-hidden="true">✧</div>
+      <h2>Hey Kartik, I'm here.</h2>
+      <p>Ask anything. Let's figure it out together.</p>
+    </section>
+
+    <div class="suggestions" aria-label="Suggested prompts">
+      <button class="suggestion" data-prompt="Explain accounting in easy Hinglish.">📚 Study help</button>
+      <button class="suggestion" data-prompt="Give me realistic zero-investment earning ideas in India.">💡 Earning ideas</button>
+      <button class="suggestion" data-prompt="Teach me one useful English sentence today.">🌍 Learn English</button>
+      <button class="suggestion" data-prompt="Give me a simple plan for today.">⚡ Plan my day</button>
+    </div>
+
+    <section id="chat" class="chat" aria-live="polite">
+      <div class="message assistant">
+        Hey Kartik! 👋 I'm Kartik AI. Type your question or tap the microphone to speak. Connect the secure backend to get real Gemini AI answers.
+      </div>
+    </section>
+
+    <form id="form" class="composer">
+      <textarea id="prompt" rows="2" placeholder="Message Kartik AI..." aria-label="Your message"></textarea>
+      <div class="controls">
+        <button class="control" type="button" id="mic" title="Voice input" aria-label="Voice input">🎙️</button>
+        <button class="control" type="button" id="stopVoice" title="Stop speaking">🔇</button>
+        <button class="control" type="button" id="clear" title="Clear conversation">↺</button>
+        <button class="control send" type="submit" id="send">Send ↑</button>
+      </div>
+    </form>
+
+    <div class="options">
+      <label><input type="checkbox" id="useAI" checked> Use connected AI backend</label>
+      <label><input type="checkbox" id="speak" checked> Speak replies</label>
+    </div>
+
+    <footer>
+      Kartik AI · Built for Kartik · Keep your API keys private
+    </footer>
+  </main>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const form = document.getElementById("form");
+    const promptBox = document.getElementById("prompt");
+    const sendButton = document.getElementById("send");
+    const micButton = document.getElementById("mic");
+    const useAI = document.getElementById("useAI");
+    const speakReplies = document.getElementById("speak");
+
+    let busy = false;
+    let recognition = null;
+
+    function addMessage(text, role) {
+      const div = document.createElement("div");
+      div.className = "message " + role;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+      return div;
+    }
+
+    function speak(text) {
+      if (!speakReplies.checked || !("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = /[\u0900-\u097F]/.test(text) ? "hi-IN" : "en-IN";
+      utterance.rate = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    async function askAI(message) {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "Backend request failed (" + response.status + ").");
+      }
+
+      const answer = data.reply || data.text ||
+        data.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("\n");
+
+      if (!answer) throw new Error("AI response was empty. Check your backend configuration.");
+      return answer;
+    }
+
+    function demoReply(message) {
+      const lower = message.toLowerCase();
+
+      if (lower.includes("accounting")) {
+        return "Accounting ka matlab hai business ke financial transactions ko record, classify, summarize aur analyse karna. Example: sales, purchases, expenses aur profit ka record rakhna.";
+      }
+
+      if (lower.includes("hello") || lower.includes("hi")) {
+        return "Hey Kartik! 👋 Kaise ho? Batao, aaj kis cheez mein help karun?";
+      }
+
+      return "Abhi Kartik AI demo mode mein hai, isliye ye real AI response nahi hai. Real answers ke liye secure /api/chat backend deploy karo aur Cloudflare mein GEMINI_API_KEY secret set karo.";
+    }
+
+    async function sendMessage(message) {
+      message = message.trim();
+      if (!message || busy) return;
+
+      busy = true;
+      sendButton.disabled = true;
+      addMessage(message, "user");
+      promptBox.value = "";
+
+      const loading = addMessage("Kartik AI is thinking...", "assistant typing");
+
+      try {
+        let answer;
+
+        if (useAI.checked) {
+          answer = await askAI(message);
+        } else {
+          answer = demoReply(message);
+        }
+
+        loading.textContent = answer;
+        loading.className = "message assistant";
+        chat.scrollTop = chat.scrollHeight;
+        speak(answer);
+      } catch (error) {
+        loading.textContent =
+          "Connection problem: " + error.message +
+          "\n\nCheck that your secure backend is deployed at /api/chat and that the Gemini API secret is configured. Your API key should never be placed in this HTML file.";
+        loading.className = "message assistant";
+      } finally {
+        busy = false;
+        sendButton.disabled = false;
+        promptBox.focus();
+      }
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      sendMessage(promptBox.value);
+    });
+
+    promptBox.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    document.querySelectorAll("[data-prompt]").forEach(button => {
+      button.addEventListener("click", () => {
+        promptBox.value = button.dataset.prompt;
+        sendMessage(promptBox.value);
+      });
+    });
+
+    document.getElementById("clear").addEventListener("click", () => {
+      window.speechSynthesis?.cancel();
+      chat.replaceChildren();
+      addMessage("Chat cleared, Kartik. What's on your mind?", "assistant");
+    });
+
+    document.getElementById("stopVoice").addEventListener("click", () => {
+      window.speechSynthesis?.cancel();
+    });
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = "hi-IN";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        micButton.textContent = "🔴";
+        micButton.title = "Listening...";
+      };
+
+      recognition.onresult = event => {
+        promptBox.value = event.results[0][0].transcript;
+        promptBox.focus();
+      };
+
+      recognition.onerror = event => {
+        addMessage("Microphone issue: " + event.error +
+          ". Allow microphone access in your browser and try again.", "assistant");
+      };
+
+      recognition.onend = () => {
+        micButton.textContent = "🎙️";
+        micButton.title = "Voice input";
+      };
+
+      micButton.addEventListener("click", () => {
+        try {
+          recognition.start();
+        } catch (_) {
+          addMessage("Microphone is already active. Try again in a moment.", "assistant");
+        }
+      });
+    } else {
+      micButton.addEventListener("click", () => {
+        addMessage("Voice input isn't supported by this browser. Try Chrome and allow microphone access.", "assistant");
+      });
+    }
+  </script>
+</body>
+</html>
